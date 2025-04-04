@@ -1,3 +1,48 @@
+## Exit trees
+
+Exit trees manage the stack of the network.
+
+- Mainnet has a local exit tree built as an append-only tree of 32 levels.
+- Each rollup has a local exit tree which is also an append-only tree of 32 levels.
+- All rollups are grouped together in a tree of rollups called the rollup exit tree, which is also an append-only tree of 32 levels.
+
+![Unified bridge mainnet and rollup exit trees](../../../../img/zkEVM/ulxly-mainnet-and-rollup-exit-trees.png)
+
+## Global index
+
+When creating and verifying proofs, a `globalIndex` locates a leaf in the global exit tree. The `globalIndex`​ is a 256-bit string composed of unused bits, mainnet flag, rollup index bits, and local root index bits.
+
+The global index contains the following:
+
+| Name             | Type    | How many bits |
+|------------------|---------|---------------|
+| unused bits      | uint256 | 191           |
+| `mainnetFlag`    | uint256 | 1             |
+| `rollupIndex`    | uint256 | 32            |
+| `localRootIndex` | uint256 | 32            |
+
+- The unused bits can be filled with any value. The best option is to fill them with zeros because zeros are cheaper.
+- The `mainnetFlag` is a single bit that serves as a flag indicating whether an exit pertains to a rollup (represented by $0$) or the mainnet (indicated by $1$).
+- The `rollupIndex` bits indicate the specific rollup being pointed at, within the rollup exit tree. These bits are therefore only used whenever mainnet flag is $0$.
+- The `localRootIndex` bits indicate the specific index being pointed at, within each rollup's local exit tree.
+
+The figure below depicts how the $\texttt{globalIndex}$ is interpreted:
+
+![ulxly-mainnet-and-rollups-exit-trees-2](../../../../img/zkEVM/ulxly-mainnet-and-rollups-exit-trees-2.png)
+
+The mainnet exit tree has the $\texttt{globalIndex = X_1_X_3}$, where 
+
+  - the $\texttt{mainnet flag}$ equals $\texttt{1}$ to indicates that it's the mainnet, and 
+  - the $\texttt{local root index}$ being $\texttt{3}$ points at the fourth leaf in the mainnet exit tree.
+
+The rollup 9002's exit tree has the $\texttt{globalIndex = X_0_1_2}$, where 
+
+  - the $\texttt{mainnet flag}$ is $\texttt{0}$ indicating that it's a rollup, 
+  - the $\texttt{rollupIndex = 1}$ means the rollup is the second in the rollup exit tree, and 
+  - the $\texttt{local root index = 3}$, pointing at the fourth leaf in the rollup 9002's exit tree.
+
+## Exit root contracts
+
 The class diagram below describes how the exit root contracts communicate with the bridge and the rollup manager.
 
 ![Polygon Solidity smart contract bridging architecture](../../../../img/cdk/high-level-architecture/exit-root-class-diagram.png)
