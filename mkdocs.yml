@@ -55,6 +55,12 @@ nav:
       - Overview: cdk/overview.md
       - Version compatibility matrix: cdk/version-matrix.md
       - Build: '!import https://github.com/0xPolygon/kurtosis-cdk?branch=main'
+      - Erigon: 
+        - Erigon: cdk/erigon/index.md
+        - Releases: cdk/erigon/releases.md
+        - Deploy a node: cdk/erigon/deploy-cdk-erigon.md
+        - How to:
+            - Configure chains dynamically: cdk/erigon/chain-config.md
       - Architecture:
         - Unified Bridge API and auto-claim service: cdk/architecture/unified-bridge-api.md
         - Unified bridge - STB: cdk/architecture/staking-the-bridge.md
